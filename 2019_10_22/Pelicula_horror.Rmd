@@ -1,0 +1,123 @@
+---
+title: "Pelicula de horror"
+author: "Jorge Leonardo López Martínez"
+date: "31/10/2019"
+output: html_document
+---
+
+<!-- La base de datos empleada para participar en la iniciativa de tidytuesday (o datos de miércoles) es sobre peliculas de terror... que mejor base de datos hoy día de Halloween -->
+
+```{r Importación, echo = FALSE, eval = TRUE, message = FALSE}
+
+#peliculas_horror <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-22/horror_movies.csv')
+
+#save(peliculas_horror, file = 'Horror.Rdata')
+load('Horror.Rdata')
+```
+
+```{r Carga de paquetes, echo = FALSE, eval = TRUE, message = FALSE}
+
+library(dplyr)
+library(lubridate)
+library(tidyr)
+library(ggplot2)
+library(png)
+library(jpeg)
+library(gridGraphics)
+library(emo)
+```
+
+```{r Edición de la base de datos a emplear, echo = FALSE, eval = TRUE, message = FALSE, warning = FALSE}
+
+Base_datos <- peliculas_horror %>%
+  # Se deja solo las peliculas cuya fecha de lanzamiento fue en Octubre
+  mutate(Fecha_lanzamiento = dmy(release_date),
+         Mes_lanzamiento = month(Fecha_lanzamiento)) %>%
+  filter(Mes_lanzamiento == 10) %>%
+  # Se identifican distintos generos del cine
+  mutate(
+    #Genero_1 = case_when(
+      #grepl('Horror', genres) ~ 'Terror'),
+    Genero_2 = case_when(
+      grepl('Adventure', genres) ~ 'Ficción'),
+    Genero_3 = case_when(
+      grepl('Action', genres) ~ 'Acción'),
+    Genero_4 = case_when(
+      grepl('Comedy', genres) ~ 'Comedia'),
+    Genero_5 = case_when(
+      grepl('Thriller', genres) ~ 'Suspenso'),
+    Genero_6 = case_when(
+      grepl('Drama', genres) ~ 'Drama'),
+    Genero_7 = case_when(
+      grepl('Fantasy', genres) ~ 'Fantastica'),
+    Genero_8 = case_when(
+      grepl('Western', genres) ~ 'Viejo oeste'),
+    Genero_9 = case_when(
+      grepl('Romance', genres) ~ 'Romanticas'),
+    Genero_10 = case_when(
+      grepl('Animation', genres) ~ 'Animada')
+  ) %>%
+  # Se pasa de formato ancho a formato largo y se dejan las variables de interes
+  gather(key = 'Generos_cine', value = 'Genero', 15:23) %>%
+  select(Genero) %>%
+  # Se cuenta el número total de peliculas en cada genero lanzadas en Octubre
+  group_by(Genero) %>%
+  summarise(Total = length(Genero)) %>%
+  ungroup() %>%
+  filter(Genero != 'is.na')
+```
+
+```{r Gráfica, echo = FALSE, eval = TRUE, message = FALSE}
+
+Imagen_1 <- readJPEG('Zombies_1.jpg', native = TRUE)
+g1 <- rasterGrob(Imagen_1, interpolate=FALSE)
+
+Imagen_2 <- readJPEG('Zombies_6.jpg', native = TRUE)
+g2 <- rasterGrob(Imagen_2, interpolate=FALSE)
+
+Imagen_3 <- readJPEG('Zombies_5.jpg', native = TRUE)
+g3 <- rasterGrob(Imagen_3, interpolate=FALSE)
+
+Imagen_4 <- readJPEG('Zombies_2.jpg', native = TRUE)
+g4 <- rasterGrob(Imagen_4, interpolate=FALSE)
+
+Imagen_5 <- readJPEG('Zombies_8.jpg', native = TRUE)
+g5 <- rasterGrob(Imagen_5, interpolate=FALSE)
+
+Imagen_6 <- readJPEG('Zombies_9.jpg', native = TRUE)
+g6 <- rasterGrob(Imagen_6, interpolate=FALSE)
+
+Imagen_7 <- readJPEG('Zombies_7.jpg', native = TRUE)
+g7 <- rasterGrob(Imagen_7, interpolate=FALSE)
+
+Imagen_8 <- readJPEG('Zombies_3.jpg', native = TRUE)
+g8 <- rasterGrob(Imagen_8, interpolate=FALSE)
+
+Imagen_9 <- readJPEG('Zombies_4.jpg', native = TRUE)
+g9 <- rasterGrob(Imagen_9, interpolate=FALSE)
+
+Grafica_1 <- ggplot(data = Base_datos, aes(x = Genero, y = Total, colour = Genero, fill = Genero)) +
+  geom_bar(stat = 'identity', alpha = 0.4) +
+  scale_colour_manual(values = c('yellow', 'turquoise1', 'violetred1', 'chartreuse', 'magenta', 'springgreen', 'green', 'gray54', 'black')) + 
+  scale_fill_manual(values = c('yellow', 'turquoise1', 'violetred1', 'chartreuse', 'magenta', 'springgreen', 'green', 'gray54', 'black')) +
+  theme_classic() + theme(legend.position = 'none') +
+  theme(axis.text.x = element_text(size = 10.4, color = 'black', face = 'bold', angle = 45), 
+        axis.text.y = element_text(size = 10.4, color = 'black', face = 'bold'),
+        axis.title = element_text(size = 15, face = 'bold'),
+        plot.title = element_text(size = 14, face = 'bold')) +
+  scale_y_continuous(limits = c(0, 250)) +
+  annotation_custom(g1, xmin = 0.8, xmax = 1.4, ymin = 57.0, ymax = 131.0) +
+  annotation_custom(g2, xmin = 1.8, xmax = 2.4, ymin = 12.0, ymax = 76.0) +
+  annotation_custom(g3, xmin = 2.7, xmax = 3.3, ymin = 98.0, ymax = 172.0) +
+  annotation_custom(g4, xmin = 3.8, xmax = 4.4, ymin = 80.0, ymax = 154.0) +
+  annotation_custom(g5, xmin = 4.8, xmax = 5.4, ymin = 34.0, ymax = 108.0) +
+  annotation_custom(g6, xmin = 5.7, xmax = 6.3, ymin = 16.0, ymax = 90.0) +
+  annotation_custom(g7, xmin = 6.7, xmax = 7.3, ymin = 12.0, ymax = 86.0) +
+  annotation_custom(g8, xmin = 7.6, xmax = 8.4, ymin = 192.0, ymax = 272.0) +
+  annotation_custom(g9, xmin = 8.8, xmax = 9.4, ymin = 1.0, ymax = 82.2) +
+  labs(title = paste('Las peliculas de terror dentro de otros tipos de generos de peliculas en\n el mes de Octubre', emo::ji('ghost')),
+       x = NULL, y = NULL,
+       caption = "#tidytuesday #datosdemiercoles por @leo4luffy") +
+  ggsave('ph.png')
+Grafica_1
+```
