@@ -6,12 +6,9 @@ load('2019_04_23/Anime.Rdata')
 
 # Se cargan los paquetes necesarios ----
 
-library(dplyr)
+library(tidyverse)
 library(ggplot2)
 library(magick)
-
-# Se intenta cargar una imagen gif ----
-
 
 # Se crea una pequeña paleta de colores (https://drsimonj.svbtle.com/creating-corporate-colour-palettes-for-ggplot2) ----
 
@@ -63,24 +60,22 @@ Base_datos <- tidy_anime %>%
   ggplot(aes(x = name, y = score)) +
   geom_bar(stat = 'identity', color = leo_cols('black'), 
            fill = leo_cols('black'), alpha = 0.4) +
-  #scale_x_continuous(limits = c(0, 12.0)) +
+  scale_y_continuous(limits = c(0, 15)) +
   theme_classic() +
   labs(title = 'Algunos de mis animes shōnen favoritos', y = 'Puntuación', 
        x = '', caption = '#tidytuesday by @Leo4Luffy') +
   theme(axis.title = element_text(size = 10, face = 'bold'),
-        axis.text.x = element_text(size = 8, color = 'black', face = 'bold', angle = 45),
+        axis.text.x = element_text(size = 8, color = 'black', face = 'bold', angle = 20),
         axis.text.y = element_text(size = 8, color = 'black', face = 'bold'),
         plot.title = element_text(size = 12, color = 'black', face = 'bold')) +
   ggsave('2019_04_23/anime.png')
 
-#grafica <- image_read('2019_04_23/anime.png') # Se carga de nuevo el anterior gráfico
+grafica <- image_read('2019_04_23/anime.png') # Se carga de nuevo el anterior gráfico
 
-gif_Deku <- image_read('') # Se carga una imagen gif
-
-frames <- lapply(gif_Deku, function(frame) { # Esta es una función necesaria para incluir el gif en la gráfica
-  image_composite(grafica, frame, offset = "+70+800")
-})
-
-animacion <- image_animate(image_join(frames)) # Usando la anterior función, se junta el gif con la gráfica
-
-image_write(animacion, '2019_04_23/Anime_Deku.gif') # Se importa la imagen
+image_read('https://pa1.narvii.com/6138/129c193c23791c79ecc6909a994826651a3d8cc8_hq.gif') %>%
+  image_apply( function(Naruto){
+    image_composite(grafica, Naruto, offset = '+1000+8')
+  }) %>%
+  image_resize('40%') %>%
+  image_animate() %>%
+  image_write('2019_04_23/Anime_tidy.gif')
