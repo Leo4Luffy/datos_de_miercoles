@@ -1,5 +1,10 @@
 # Gráficos de datos de miercoles
 
+## Conjunto de datos sobre anime
+El conjunto de datos y la información del mismo lo puedes encontrar [aquí](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-04-23).
+
+![](https://raw.githubusercontent.com/Leo4Luffy/datos_de_miercoles/master/2019_04_23/Anime_tidy.gif)
+
 ## Peliculas de horror
 
 El conjunto de datos y la información del mismo lo puedes encontrar [aquí](https://github.com/rfordatascience/tidytuesday/tree/master/data/2019/2019-10-22).
