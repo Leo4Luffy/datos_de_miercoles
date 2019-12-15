@@ -60,7 +60,7 @@ Base_datos <- tidy_anime %>%
   ggplot(aes(x = name, y = score)) +
   geom_bar(stat = 'identity', color = leo_cols('black'), 
            fill = leo_cols('black'), alpha = 0.4) +
-  scale_y_continuous(limits = c(0, 15)) +
+  scale_y_continuous(limits = c(0, 13)) +
   theme_classic() +
   labs(title = 'Algunos de mis animes shōnen favoritos', y = 'Puntuación', 
        x = '', caption = '#tidytuesday by @Leo4Luffy') +
@@ -72,9 +72,9 @@ Base_datos <- tidy_anime %>%
 
 grafica <- image_read('2019_04_23/anime.png') # Se carga de nuevo el anterior gráfico
 
-image_read('https://pa1.narvii.com/6138/129c193c23791c79ecc6909a994826651a3d8cc8_hq.gif') %>%
+image_read('https://pa1.narvii.com/6138/129c193c23791c79ecc6909a994826651a3d8cc8_hq.gif') %>% # Esta pequeña función a continuación, permite unir la gráfica ggplot creada anteriormente, con una imagen gif... luego se importa el resultado
   image_apply( function(Naruto){
-    image_composite(grafica, Naruto, offset = '+1000+8')
+    image_composite(grafica, Naruto, offset = '+1400+100')
   }) %>%
   image_resize('40%') %>%
   image_animate() %>%
